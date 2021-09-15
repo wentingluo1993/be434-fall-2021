@@ -33,9 +33,12 @@ def main():
 
     int_arg_string = map(str,int_arg)
     print(' + '.join(int_arg_string) +  ' = '  + str(sum(int_arg)) )
+#   Print('{} = {}'.format(' + '.join(int_arg_string),str(sum(int_arg))))
+
+# nums = [str(num) for num in args.nums]
+# Print('{} = {}'.format(' + '.join(nums),sum(args.numbers)))
 
 
 # --------------------------------------------------
 if __name__ == '__main__':
     main()
-
