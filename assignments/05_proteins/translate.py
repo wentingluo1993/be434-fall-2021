@@ -53,7 +53,8 @@ def main():
     k = 3
     for codon in [seq[i:i + k] for i in range(0, len(seq), k)]:
         out_file.write(codon_table.get(codon.upper(), '-'))
-    print('Output written to "{}".'.format(args.outfile.name))
+    #   print('Output written to "{}".'.format(args.outfile.name))
+    print(f'Output written to "{args.outfile.name}".')
 
 
 # --------------------------------------------------
