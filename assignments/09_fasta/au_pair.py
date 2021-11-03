@@ -9,6 +9,7 @@ import argparse
 import os
 from Bio import SeqIO
 
+
 # --------------------------------------------------
 def get_args():
     """Get command-line arguments"""
@@ -17,7 +18,7 @@ def get_args():
         description='Split interleaved/paired reads',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('file',
+    parser.add_argument('files',
                         metavar='FILE',
                         nargs='+',
                         help='Input file(s)',
@@ -30,9 +31,10 @@ def get_args():
                         type=str,
                         default='split')
 
-    args = parser.parse_args()                    
+    args = parser.parse_args()
     if not os.path.isdir(args.outdir):
-       os.mkdir(args.outdir)
+        os.mkdir(args.outdir)
+
     return args
 
 
@@ -40,23 +42,16 @@ def get_args():
 def main():
     """Make a jazz noise here"""
     args = get_args()
+    out_dir = args.outdir
 
-    for fh in args.file:
-        basename = os.path.basename(fh.name)
-        root, ext = os.path.splitext(basename)
-        seq_data = SeqIO.parse(fh, 'fasta')
-
-    for i, rec in enumerate(seq_data,1):
-        if i % 2 == 1:
-           outdir = os.path.join(args.outdir, root + '_1' + ext)
-        with open(outdir, 'wt') as fh:
-           fh.write(">" + rec.description + "\n" + str(rec.seq) + "\n")
-        if i % 2 == 0:
-           outdir = os.path.join(args.outdir, root + '_2' + ext)
-        with open(outdir, 'wt') as fh:
-           fh.write(">" + rec.description + "\n" + str(rec.seq) + "\n")
-
-    print(f'Done, see output in "{args.outdir}"')
+    for fh in args.files:
+        root, ext = os.path.splitext(os.path.basename(fh.name))
+        forward = open(os.path.join(out_dir, root + '_1' + ext), "wt",encoding='utf-8')
+        reverse = open(os.path.join(out_dir, root + '_2' + ext), "wt",encoding='utf-8')
+        parser = SeqIO.parse(fh, 'fasta')
+        for i, rec in enumerate(parser):
+            SeqIO.write(rec, forward if i % 2 == 0 else reverse, 'fasta')
+    print(f'Done, see output in "{out_dir}"')
 
 
 # --------------------------------------------------
